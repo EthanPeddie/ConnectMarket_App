@@ -87,23 +87,25 @@ const AddPostScreen = () => {
                 onChangeText={handleChange("price")}
                 keyboardType="numeric"
               />
-              <Picker
-                selectedValue={values.category}
-                onValueChange={(itemValue) =>
-                  setFieldValue("category", itemValue)
-                }
-              >
-                {categoryList !== null &&
-                  categoryList.map((item, index) => (
-                    <Picker.Item
-                      value={item.name}
-                      key={index}
-                      label={item.name}
-                    />
-                  ))}
-              </Picker>
+              <View className=" border rounded-xl mt-[10px]">
+                <Picker
+                  selectedValue={values.category}
+                  onValueChange={(itemValue) =>
+                    setFieldValue("category", itemValue)
+                  }
+                >
+                  {categoryList !== null &&
+                    categoryList.map((item, index) => (
+                      <Picker.Item
+                        value={item.name}
+                        key={index}
+                        label={item.name}
+                      />
+                    ))}
+                </Picker>
+              </View>
               <TouchableOpacity
-                className="bg-blue-700 p-4 rounded-2xl mt-2"
+                className="bg-blue-700 p-4 rounded-2xl mt-[20px]"
                 onPress={handleSubmit}
               >
                 <Text className="text-center text-white font-bold text-[15px]">
