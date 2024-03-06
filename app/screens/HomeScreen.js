@@ -3,7 +3,7 @@ import React from "react";
 
 const HomeScreen = () => {
   return (
-    <View>
+    <View className="mt-12">
       <Text>HomeScreen</Text>
     </View>
   );
