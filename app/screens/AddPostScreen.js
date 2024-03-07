@@ -4,16 +4,20 @@ import {
   TextInput,
   StyleSheet,
   TouchableOpacity,
+  Image,
 } from "react-native";
 import React, { useEffect, useState } from "react";
-import { app } from "../../firebaseConfig";
 import { getFirestore, collection, getDocs } from "firebase/firestore";
 import { Formik } from "formik";
 import { Picker } from "@react-native-picker/picker";
+import * as ImagePicker from "expo-image-picker";
+
+import { app } from "../../firebaseConfig";
 
 const AddPostScreen = () => {
   const db = getFirestore(app);
   const [categoryList, setCategoryList] = useState([]);
+  const [image, setImage] = useState(null);
 
   useEffect(() => {
     getCategoryList();
@@ -31,6 +35,26 @@ const AddPostScreen = () => {
     } catch (error) {
       console.error("Error fetching documents: ", error);
     }
+  };
+
+  const pickImage = async () => {
+    let result = await ImagePicker.launchImageLibraryAsync({
+      mediaTypes: ImagePicker.MediaTypeOptions.All,
+      allowsEditing: true,
+      aspect: [4, 4],
+      quality: 1,
+    });
+
+    console.log(result);
+
+    if (!result.canceled) {
+      setImage(result.assets[0].uri);
+    }
+  };
+
+  const onSubmitMethod = (value) => {
+    value.image = image;
+    console.log(value);
   };
 
   return (
@@ -51,7 +75,7 @@ const AddPostScreen = () => {
             address: "",
             image: "",
           }}
-          onSubmit={(value) => console.log(value)}
+          onSubmit={(value) => onSubmitMethod(value)}
         >
           {({
             handleChange,
@@ -61,8 +85,22 @@ const AddPostScreen = () => {
             setFieldValue,
           }) => (
             <View>
+              <TouchableOpacity
+                onPress={pickImage}
+                style={{ width: 100, height: 100 }}
+              >
+                {image ? (
+                  <Image source={{ uri: image }} style={styles.image} />
+                ) : (
+                  <Image
+                    source={require("../../assets/placeholder.png")}
+                    style={styles.image}
+                  />
+                )}
+              </TouchableOpacity>
+
               <TextInput
-                placeholder="itle"
+                placeholder="title"
                 value={values.title}
                 style={styles.textInput}
                 onChangeText={handleChange("title")}
@@ -127,6 +165,12 @@ const styles = StyleSheet.create({
     padding: 10,
     paddingHorizontal: 17,
     marginVertical: 10,
+  },
+  image: {
+    width: 100,
+    height: 100,
+    borderRadius: 20,
+    marginBottom: 10,
   },
 });
 
